@@ -14,7 +14,7 @@
 
 ## neeo adapter for ioBroker
 
-Accessing the universal remote control Neeo
+Accessing the universal remote control Neeo https://neeo.com/
 
 ## Developer manual
 This section is intended for the developer. It can be deleted later
