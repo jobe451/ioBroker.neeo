@@ -52,7 +52,7 @@
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "build/main.js",
-		"icon": "neeo.png",
+		"icon": "neeo.svg",
 		"enabled": true,
 		"extIcon": "https://raw.githubusercontent.com/jobe451/ioBroker.neeo/master/admin/neeo.png",
 		"readme": "https://github.com/jobe451/ioBroker.neeo/blob/master/README.md",
@@ -70,8 +70,6 @@
 		]
 	},
 	"native": {
-		"option1": true,
-		"option2": "42"
 	},
 	"objects": [],
 	"instanceObjects": [

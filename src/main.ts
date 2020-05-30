@@ -17,8 +17,6 @@ declare global {
 	namespace ioBroker {
 		interface AdapterConfig {
 			// Define the shape of your options here (recommended)
-			option1: boolean;
-			option2: string;
 			// Or use a catch-all approach
 			[key: string]: any;
 		}
