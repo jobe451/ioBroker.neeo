@@ -57,3 +57,4 @@ function translateText(text, targetLang) {
     });
 }
 exports.translateText = translateText;
+//# sourceMappingURL=/opt/iobroker/node_modules/iobroker.neeo/build/lib/tools.js.map

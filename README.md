@@ -1,4 +1,3 @@
-![Logo](admin/neeo.png)
 # ioBroker.neeo
 
 [![NPM version](http://img.shields.io/npm/v/iobroker.neeo.svg)](https://www.npmjs.com/package/iobroker.neeo)

@@ -4,6 +4,7 @@
  */
 "use strict";
 
+const exec = require('child_process').exec;
 const gulp = require("gulp");
 const fs = require("fs");
 const pkg = require("./package.json");
@@ -406,8 +407,8 @@ gulp.task("updateReadme", function (done) {
 		if (readme.indexOf(version) === -1) {
 			const timestamp = new Date();
 			const date = timestamp.getFullYear() + "-" +
-					("0" + (timestamp.getMonth() + 1).toString(10)).slice(-2) + "-" +
-					("0" + (timestamp.getDate()).toString(10)).slice(-2);
+				("0" + (timestamp.getMonth() + 1).toString(10)).slice(-2) + "-" +
+				("0" + (timestamp.getDate()).toString(10)).slice(-2);
 
 			let news = "";
 			if (iopackage.common.news && iopackage.common.news[pkg.version]) {
@@ -473,3 +474,39 @@ gulp.task("translate", async function (done) {
 gulp.task("translateAndUpdateWordsJS", gulp.series("translate", "adminLanguages2words", "adminWords2languages"));
 
 gulp.task("default", gulp.series("updatePackages", "updateReadme"));
+
+
+
+
+gulp.task('testpublish', function (cb) {
+	exec('npm pack', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+
+		let outfile = stdout.match(/^(iobroker\..*\-[0-9]+.[0-9]+.[0-9]+.tgz)/);
+
+		if (outfile) {
+			console.log("packed", outfile[1]);
+
+			exec('npm i /home/jobe451/workspaces/iobroker.neeo/'+ outfile[1], {cwd: "/opt/iobroker"}, function (err, stdout, stderr) {
+				console.log(stdout);
+				console.log(stderr);
+
+				if (!err) {
+					exec('iobroker upload neeo', {cwd: "/opt/iobroker"}, function (err, stdout, stderr) {
+						console.log(stdout);
+						console.log(stderr);
+						cb(err);
+					});
+				}
+				else {
+					cb(err);
+				}
+			});
+		}
+		else {
+			cb(err);
+		}
+
+	});
+})

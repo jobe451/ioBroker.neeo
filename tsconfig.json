@@ -30,7 +30,8 @@
 		// Consider targetting es2017 or higher if you require the new NodeJS 8+ features
 		"target": "es2015",
 
-		"sourceMap": false,
+		"sourceMap": true,
+		"mapRoot": "/opt/iobroker/node_modules/iobroker.neeo/build/",
 		"inlineSourceMap": false,
 		"watch": false
 	},
