@@ -11,20 +11,55 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NeeoBridge = void 0;
 const neeoapi = require("neeo-sdk");
-class NeeoBridge {
+const events_1 = require("events");
+const INTERVALL_POWER_CHECK = 1000 * 5;
+class NeeoBridge extends events_1.EventEmitter {
     constructor() {
+        super();
         this.recipeMap = new Map();
+        this.isInitialized = false;
+        this.brainInfo = null;
     }
-    getDeviceInfo() {
+    init() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.isInitialized) {
+                throw new Error("You can't initialize NeeoBridge twice");
+            }
             console.log("- discover one NEEO Brain...");
             const brain = yield neeoapi.discoverOneBrain();
             console.log("- Brain discovered:", brain.name);
             const recipInfo = yield this.getReceipInfo(brain);
-            return {
-                brain: brain,
-                recipInfo: recipInfo
-            };
+            this.isInitialized = true,
+                this.brainInfo = {
+                    brain: brain,
+                    recipInfo: recipInfo
+                };
+            setInterval(() => {
+                neeoapi.getRecipesPowerState(brain).then((powerOnKeys) => {
+                    for (const [key, recipe] of this.recipeMap) {
+                        if (powerOnKeys.includes(key)) {
+                            if (!recipe.isPoweredOn) {
+                                this.emit("powerOn", key);
+                            }
+                        }
+                        else {
+                            if (recipe.isPoweredOn) {
+                                this.emit("powerOff", key);
+                            }
+                        }
+                    }
+                }).catch((e) => {
+                    this.emit("error", "something went wrong during brain-power-check: " + e.toString());
+                });
+            }, INTERVALL_POWER_CHECK);
+        });
+    }
+    getDeviceInfo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.brainInfo === null) {
+                throw new Error("brain not properly initialized");
+            }
+            return this.brainInfo;
         });
     }
     powerOn(powerKey) {

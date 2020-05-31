@@ -32,6 +32,7 @@ class Neeo extends utils.Adapter {
     onReady() {
         return __awaiter(this, void 0, void 0, function* () {
             this.setState("info.connection", false, true);
+            yield this.neeoBridge.init();
             const deviceInfo = yield this.neeoBridge.getDeviceInfo();
             //		console.log(deviceInfo);
             this.setState("info.connection", true, true);

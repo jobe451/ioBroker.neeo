@@ -1,19 +1,60 @@
 import neeoapi = require("neeo-sdk");
+import {EventEmitter} from "events";
 
-export class NeeoBridge {
+const INTERVALL_POWER_CHECK = 1000*5;
+
+
+export class NeeoBridge extends EventEmitter {
 
 	private recipeMap = new Map<string, any>();
+	private brainInfo: BrainInfo | null;
+	private isInitialized = false;
 
-	public async getDeviceInfo(): Promise<BrainInfo> {
+	constructor() {
+		super();
+		this.brainInfo = null;
+	}
+
+	public async init(): Promise<void> {
+		if (this.isInitialized) {
+			throw new Error("You can't initialize NeeoBridge twice");
+		}
 		console.log("- discover one NEEO Brain...");
 		const brain = await neeoapi.discoverOneBrain();
 		console.log("- Brain discovered:", brain.name);
 		const recipInfo = await this.getReceipInfo(brain);
 
-		return {
+		this.isInitialized=true,
+		this.brainInfo =  {
 			brain: brain,
 			recipInfo: recipInfo
-		} as BrainInfo;
+		};
+
+		setInterval(() => {
+			neeoapi.getRecipesPowerState(brain).then((powerOnKeys: Array<string>) => {
+				for (const [key, recipe] of this.recipeMap) {
+					if (powerOnKeys.includes(key)) {
+						if (!recipe.isPoweredOn) {
+							this.emit("powerOn", key);
+						}
+					}
+					else {
+						if (recipe.isPoweredOn) {
+							this.emit("powerOff", key);
+						}	
+					}
+				}
+			}).catch((e: any) => {
+				this.emit("error", "something went wrong during brain-power-check: " + e.toString());
+			});
+		}, INTERVALL_POWER_CHECK);
+	}
+
+	public async getDeviceInfo(): Promise<BrainInfo> {
+		if (this.brainInfo === null) {
+			throw new Error ("brain not properly initialized");
+		}
+		return this.brainInfo;
 	}
 	
 	public async powerOn(powerKey: string): Promise<any> {
