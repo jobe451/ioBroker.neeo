@@ -51,6 +51,7 @@ class Neeo extends utils.Adapter {
 		const deviceInfo = await this.neeoBridge.getDeviceInfo();
 		//console.log(deviceInfo);
 		this.setState("info.connection", true, true);
+		
 
 
 		await this.setObjectAsync("0", {

@@ -26,7 +26,14 @@ class NeeoBridge extends events_1.EventEmitter {
                 throw new Error("You can't initialize NeeoBridge twice");
             }
             console.log("- discover one NEEO Brain...");
-            const brain = yield neeoapi.discoverOneBrain();
+            let brain;
+            try {
+                brain = yield neeoapi.discoverOneBrain();
+            }
+            catch (e) {
+                this.emit("error", "neeo inialization error" + e.toString());
+                return;
+            }
             console.log("- Brain discovered:", brain.name);
             const recipInfo = yield this.getReceipInfo(brain);
             this.isInitialized = true,
@@ -39,11 +46,13 @@ class NeeoBridge extends events_1.EventEmitter {
                     for (const [key, recipe] of this.recipeMap) {
                         if (powerOnKeys.includes(key)) {
                             if (!recipe.isPoweredOn) {
+                                recipe.isPoweredOn = true;
                                 this.emit("powerOn", key);
                             }
                         }
                         else {
                             if (recipe.isPoweredOn) {
+                                recipe.isPoweredOn = false;
                                 this.emit("powerOff", key);
                             }
                         }

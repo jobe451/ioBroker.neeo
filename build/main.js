@@ -34,7 +34,7 @@ class Neeo extends utils.Adapter {
             this.setState("info.connection", false, true);
             yield this.neeoBridge.init();
             const deviceInfo = yield this.neeoBridge.getDeviceInfo();
-            //		console.log(deviceInfo);
+            //console.log(deviceInfo);
             this.setState("info.connection", true, true);
             yield this.setObjectAsync("0", {
                 type: "device",
@@ -60,6 +60,14 @@ class Neeo extends utils.Adapter {
             }
             // in this template all states changes inside the adapters namespace are subscribed
             this.subscribeStates("*");
+            this.neeoBridge.on("powerOn", (key) => {
+                const nodePath = "0.devices." + key;
+                this.setStateAsync(nodePath + ".state", { val: true, ack: true });
+            });
+            this.neeoBridge.on("powerOff", (key) => {
+                const nodePath = "0.devices." + key;
+                this.setStateAsync(nodePath + ".state", { val: false, ack: true });
+            });
         });
     }
     setUpRecipe(receipe) {
