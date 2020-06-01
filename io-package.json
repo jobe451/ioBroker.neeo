@@ -1,98 +1,109 @@
 {
-	"common": {
-		"name": "neeo",
-		"version": "0.0.1",
-		"news": {
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"zh-cn": "首次出版"
-			}
-		},
-		"title": "Neeo",
-		"titleLang": {
-			"en": "Neeo",
-			"de": "Neeo",
-			"ru": "Neeo",
-			"pt": "Neeo",
-			"nl": "Neeo",
-			"fr": "Neeo",
-			"it": "Neeo",
-			"es": "Neeo",
-			"pl": "Neeo",
-			"zh-cn": "Neeo"
-		},
-		"desc": {
-			"en": "Accessing the universal remote control Neeo",
-			"de": "Accessing the universal remote control Neeo",
-			"ru": "Accessing the universal remote control Neeo",
-			"pt": "Accessing the universal remote control Neeo",
-			"nl": "Accessing the universal remote control Neeo",
-			"fr": "Accessing the universal remote control Neeo",
-			"it": "Accessing the universal remote control Neeo",
-			"es": "Accessing the universal remote control Neeo",
-			"pl": "Accessing the universal remote control Neeo",
-			"zh-cn": "Accessing the universal remote control Neeo"
-		},
-		"authors": [
-			"Daniel Keller <jobe451@gmail.com>"
-		],
-		"keywords": [
-			"ioBroker",
-			"Smart Home",
-			"home automation"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "build/main.js",
-		"icon": "neeo.svg",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/jobe451/ioBroker.neeo/master/admin/neeo.png",
-		"readme": "https://github.com/jobe451/ioBroker.neeo/blob/master/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "multimedia",
-		"compact": true,
-		"connectionType": "local",
-		"dataSource": "push",
-		"materialize": true,
-		"dependencies": [
-			{
-				"js-controller": ">=1.4.2"
-			}
-		]
-	},
-	"native": {
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": "Device or service connected",
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		}
-	]
+    "common": {
+        "name": "neeo",
+        "version": "1.0.0",
+        "news": {
+            "1.0.0": {
+                "en": "(Daniel Keller): Power on/off and brain autodetection is working",
+                "de": "(Daniel Keller): Das Ein- und Ausschalten und die automatische Erkennung des Gehirns funktionieren",
+                "ru": "(Даниэль Келлер): Включение / выключение питания и автоопределение мозга работает",
+                "pt": "(Daniel Keller): Ligar / desligar e a detecção automática do cérebro está funcionando",
+                "nl": "(Daniel Keller): Stroom aan / uit en autodetectie van de hersenen werkt",
+                "fr": "(Daniel Keller): la mise sous / hors tension et l'autodétection du cerveau fonctionnent",
+                "it": "(Daniel Keller): accensione / spegnimento e rilevamento automatico del cervello funzionano",
+                "es": "(Daniel Keller): el encendido / apagado y la autodetección cerebral están funcionando",
+                "pl": "(Daniel Keller): Włączanie / wyłączanie zasilania i automatyczne wykrywanie mózgu działa",
+                "zh-cn": "（丹尼尔·凯勒（Daniel Keller））：开启/关闭电源并进行大脑自动检测"
+            },
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Neeo",
+        "titleLang": {
+            "en": "Neeo",
+            "de": "Neeo",
+            "ru": "Neeo",
+            "pt": "Neeo",
+            "nl": "Neeo",
+            "fr": "Neeo",
+            "it": "Neeo",
+            "es": "Neeo",
+            "pl": "Neeo",
+            "zh-cn": "Neeo"
+        },
+        "desc": {
+            "en": "Accessing the universal remote control Neeo",
+            "de": "Accessing the universal remote control Neeo",
+            "ru": "Accessing the universal remote control Neeo",
+            "pt": "Accessing the universal remote control Neeo",
+            "nl": "Accessing the universal remote control Neeo",
+            "fr": "Accessing the universal remote control Neeo",
+            "it": "Accessing the universal remote control Neeo",
+            "es": "Accessing the universal remote control Neeo",
+            "pl": "Accessing the universal remote control Neeo",
+            "zh-cn": "Accessing the universal remote control Neeo"
+        },
+        "authors": [
+            "Daniel Keller <jobe451@gmail.com>"
+        ],
+        "keywords": [
+            "ioBroker",
+            "Smart Home",
+            "home automation"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "neeo.svg",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/jobe451/ioBroker.neeo/master/admin/neeo.png",
+        "readme": "https://github.com/jobe451/ioBroker.neeo/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "multimedia",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "push",
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
+    },
+    "native": {},
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }
