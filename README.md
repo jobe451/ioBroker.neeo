@@ -23,6 +23,9 @@ Current features:
 
 ## Changelog
 
+### __WORK IN PROGRESS__
+* (Daniel Keller): Power on/off and brain autodetection is working
+
 ### 0.0.1
 * (Daniel Keller) initial release
 
