@@ -32,41 +32,51 @@ class Neeo extends utils.Adapter {
     onReady() {
         return __awaiter(this, void 0, void 0, function* () {
             this.setState("info.connection", false, true);
-            yield this.neeoBridge.init();
-            const deviceInfo = yield this.neeoBridge.getDeviceInfo();
-            //console.log(deviceInfo);
-            this.setState("info.connection", true, true);
-            yield this.setObjectAsync("0", {
-                type: "device",
-                common: {
-                    name: "brain",
-                },
-                native: {},
-            });
-            yield this.setObjectAsync("0.name", {
-                type: "state",
-                common: {
-                    name: "name",
-                    type: "string",
-                    role: "info",
-                    read: true,
-                    write: false,
-                },
-                native: {},
-            });
-            yield this.setStateAsync("0.name", { val: deviceInfo.brain.name, ack: true });
-            for (const receipe of deviceInfo.recipInfo) {
-                this.setUpRecipe(receipe);
+            try {
+                yield this.neeoBridge.init();
+                const deviceInfo = yield this.neeoBridge.getDeviceInfo();
+                this.log.info("neeo brain found " + deviceInfo.brain.name);
+                this.setState("info.connection", true, true);
+                yield this.setObjectAsync("0", {
+                    type: "device",
+                    common: {
+                        name: "brain",
+                    },
+                    native: {},
+                });
+                yield this.setObjectAsync("0.name", {
+                    type: "state",
+                    common: {
+                        name: "name",
+                        type: "string",
+                        role: "info",
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                });
+                yield this.setStateAsync("0.name", { val: deviceInfo.brain.name, ack: true });
+                for (const receipe of deviceInfo.recipInfo) {
+                    this.setUpRecipe(receipe);
+                }
+            }
+            catch (error) {
+                this.log.error("neeo initialization failed" + error.toString());
             }
             // in this template all states changes inside the adapters namespace are subscribed
             this.subscribeStates("*");
             this.neeoBridge.on("powerOn", (key) => {
                 const nodePath = "0.devices." + key;
                 this.setStateAsync(nodePath + ".state", { val: true, ack: true });
+                this.log.info("neeo power on for " + key);
             });
             this.neeoBridge.on("powerOff", (key) => {
                 const nodePath = "0.devices." + key;
                 this.setStateAsync(nodePath + ".state", { val: false, ack: true });
+                this.log.info("neeo power off for " + key);
+            });
+            this.neeoBridge.on("error", (error) => {
+                this.log.error("neeo error " + error.toString());
             });
         });
     }
@@ -97,6 +107,7 @@ class Neeo extends utils.Adapter {
                 native: {},
             });
             yield this.setStateAsync(nodePath + ".state", { val: receipe.isPoweredOn, ack: true });
+            this.log.info("recipe found " + receipe.powerKey + ", " + receipe.name);
         });
     }
     /**

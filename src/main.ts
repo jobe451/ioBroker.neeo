@@ -47,36 +47,40 @@ class Neeo extends utils.Adapter {
 
 		this.setState("info.connection", false, true);
 
-		await this.neeoBridge.init();
-		const deviceInfo = await this.neeoBridge.getDeviceInfo();
-		//console.log(deviceInfo);
-		this.setState("info.connection", true, true);
-		
+		try {
+			await this.neeoBridge.init();
+			const deviceInfo = await this.neeoBridge.getDeviceInfo();
 
+			this.log.info("neeo brain found " + deviceInfo.brain.name);
+			this.setState("info.connection", true, true);
 
-		await this.setObjectAsync("0", {
-			type: "device",
-			common: {
-				name: "brain",
-			},
-			native: {},
-		});
+			await this.setObjectAsync("0", {
+				type: "device",
+				common: {
+					name: "brain",
+				},
+				native: {},
+			});
 
-		await this.setObjectAsync("0.name", {
-			type: "state",
-			common: {
-				name: "name",
-				type: "string",
-				role: "info",
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
-		await this.setStateAsync("0.name", { val: deviceInfo.brain.name, ack: true });
+			await this.setObjectAsync("0.name", {
+				type: "state",
+				common: {
+					name: "name",
+					type: "string",
+					role: "info",
+					read: true,
+					write: false,
+				},
+				native: {},
+			});
+			await this.setStateAsync("0.name", { val: deviceInfo.brain.name, ack: true });
 
-		for (const receipe of deviceInfo.recipInfo)  {
-			this.setUpRecipe(receipe);
+			for (const receipe of deviceInfo.recipInfo)  {
+				this.setUpRecipe(receipe);
+			}
+		}
+		catch (error) {
+			this.log.error("neeo initialization failed" + error.toString());
 		}
 
 		// in this template all states changes inside the adapters namespace are subscribed
@@ -84,15 +88,21 @@ class Neeo extends utils.Adapter {
 		this.neeoBridge.on("powerOn", (key) => {
 			const nodePath = "0.devices." + key;
 			this.setStateAsync(nodePath + ".state", { val: true, ack: true });			
+			this.log.info("neeo power on for " + key);
 		});
 		this.neeoBridge.on("powerOff", (key) => {
 			const nodePath = "0.devices." + key;
 			this.setStateAsync(nodePath + ".state", { val: false, ack: true });			
+			this.log.info("neeo power off for " + key);
+		});
+		this.neeoBridge.on("error", (error) => {
+			this.log.error("neeo error " + error.toString());
 		});
 	}
 
 	private async setUpRecipe(receipe: any): Promise<void> {
 		const nodePath = "0.devices." + receipe.powerKey;
+
 		await this.setObjectAsync(nodePath + ".name", {
 			type: "state",
 			common: {
@@ -118,6 +128,8 @@ class Neeo extends utils.Adapter {
 			native: {},
 		});
 		await this.setStateAsync(nodePath + ".state", { val: receipe.isPoweredOn, ack: true });
+
+		this.log.info("recipe found " + receipe.powerKey + ", " + receipe.name);
 	}
 
 	/**
